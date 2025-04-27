@@ -1,159 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Spark Registration</title>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <title>Spark</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    /* —— 基础布局 —— */
-    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
-    canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
-    h1 { position:absolute; top:10px; left:50%; transform:translateX(-50%); 
-         font-family:'Great Vibes',cursive; color:#fff; font-size:8vw; text-shadow:0 0 20px #fff; z-index:5; }
-
-   <style>
-  <style>
-  /* —— 注册表单 —— */
-  .form-container {
-    position: absolute;
-    top: 50%;
-    left: 75%; /* 只稍微右移到页面3/4位置 */
-    transform: translate(-50%, -50%);
-    background: #ffffff;
-    padding: 20px 30px;
-    border-radius: 8px;
-    width: 300px; /* 继续保持六分之一大小 */
-    height: auto;
-    z-index: 10; /* 保证在烟花和背景之上 */
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-  }
-  
-  .form-container h2 {
-    margin-bottom: 15px;
-    font-family: 'Great Vibes', cursive;
-    color: #000;
-    font-size: 2em;
-    text-align: center;
-  }
-  
-  .form-container input {
-    display: block;
-    width: 100%;
-    margin: 8px 0;
-    padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form-container button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    font-size: 1em;
-    background: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-</style>
-
-    /* —— 小烟花动图 —— */
-    .firework {
-      position:absolute; width:50px; height:50px; background-size:cover;
-      opacity:0; animation:fw 1.5s infinite;
-      z-index:2;
+    /* 页面整体背景黑色 */
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+      font-family: Arial, sans-serif;
     }
-    @keyframes fw {
-      0% {opacity:0; transform:scale(0.5) translateY(-20px)}
-      50%{opacity:1; transform:scale(1.5) translateY(0)}
-      100%{opacity:0; transform:scale(0.5) translateY(20px)}
+
+    /* Spark文字 顶部艺术字体 */
+    .spark-title {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      font-family: 'Great Vibes', cursive;
+      color: white;
+      font-size: 60px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* 注册表单 */
+    .form-container {
+      position: absolute;
+      top: 50%;
+      left: 75%;
+      transform: translate(-50%, -50%);
+      background: #ffffff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      width: 300px;
+      height: auto;
+      z-index: 10;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    
+    .form-container h2 {
+      margin-bottom: 15px;
+      font-family: 'Great Vibes', cursive;
+      color: #000;
+      font-size: 2em;
+      text-align: center;
+    }
+    
+    .form-container input {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    
+    .form-container button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 1em;
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* 烟花画布 */
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
     }
   </style>
 </head>
+
 <body>
+  <!-- Spark标题 -->
+  <div class="spark-title">Spark</div>
 
-  <!-- 烟花Canvas -->
-  <canvas id="fireworks"></canvas>
-
-  <!-- 顶部 Spark -->
-  <h1>Spark</h1>
-
-  <!-- 嵌入注册表单 -->
+  <!-- 注册表单 -->
   <div class="form-container">
     <h2>Register</h2>
-    <form id="register-form">
-      <input type="text" name="name" placeholder="Enter your name" required>
-      <input type="email" name="email" placeholder="Enter your email" required>
-      <button type="submit">Register Now</button>
+    <form id="registration-form">
+      <input type="text" id="name" placeholder="Name" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <button type="submit">Register</button>
     </form>
   </div>
 
-  <!-- 背景小烟花动图 -->
-  <div class="firework" style="background-image:url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
-  <div class="firework" style="background-image:url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
-  <div class="firework" style="background-image:url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
+  <!-- 烟花背景canvas -->
+  <canvas id="canvas"></canvas>
 
+  <!-- 烟花特效JS（不影响表单） -->
   <script>
-    // —— 烟花粒子效果（同之前） ——
-    const canvas = document.getElementById('fireworks');
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    let W=canvas.width=innerWidth, H=canvas.height=innerHeight;
-    window.addEventListener('resize',()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
+    let particles = [];
 
-    function createParticle(x,y){
-      const colors=['#ff8a00','#e52e71','#9b00ff','#00ffe1','#ffff66'];
-      return {x,y,radius:Math.random()*3+2, color:colors[Math.floor(Math.random()*colors.length)],
-        vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6-2, life:Math.random()*60+20};
-    }
-    let particles=[];
-    setInterval(()=>{
-      let fx=Math.random()*W, fy=Math.random()*(H*0.4);
-      for(let i=0;i<60;i++) particles.push(createParticle(fx,fy));
-    },500);
-    canvas.addEventListener('click',e=>{
-      for(let i=0;i<60;i++) particles.push(createParticle(e.clientX,e.clientY));
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
-    function animate(){
-      ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(0,0,W,H);
-      for(let i=particles.length-1;i>=0;i--){
-        let p=particles[i]; p.x+=p.vx; p.y+=p.vy+1; p.life--;
-        if(p.life<=0){particles.splice(i,1);continue;}
-        p.radius*=0.96; ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,2*Math.PI);
-        ctx.fillStyle=p.color; ctx.globalAlpha=p.life/80; ctx.fill(); ctx.globalAlpha=1;
+
+    function createFirework(x, y) {
+      const particleCount = 100;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          speedX: (Math.random() - 0.5) * 5,
+          speedY: (Math.random() - 0.5) * 5,
+          radius: Math.random() * 3 + 1,
+          life: 100
+        });
       }
+    }
+
+    canvas.addEventListener('click', (e) => {
+      createFirework(e.clientX, e.clientY);
+    });
+
+    function animate() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p, index) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.life--;
+
+        if (p.life <= 0) {
+          particles.splice(index, 1);
+        }
+      });
+
       requestAnimationFrame(animate);
     }
+
     animate();
-
-    // —— 小烟花动图随机位置 —— 
-    function randomPos(){
-      document.querySelectorAll('.firework').forEach(el=>{
-        el.style.left=Math.random()*(W-50)+'px';
-        el.style.top=Math.random()*(H-50)+'px';
-        el.style.animationDuration=(Math.random()*2+1)+'s';
-      });
-    }
-    setInterval(randomPos,1000);
-
-    // —— 注册表单提交 —— 
-    document.getElementById('register-form').addEventListener('submit', e=>{
-      e.preventDefault();
-      const form = e.target;
-      // 这里调用你的后端注册接口，例如：
-      fetch('/register', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          name: form.name.value,
-          email: form.email.value
-        })
-      }).then(r=> r.ok ? alert('Registration successful') : alert('Error'))
-        .catch(()=>alert('Network error'));
-    });
   </script>
+
 </body>
 </html>

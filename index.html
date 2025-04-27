@@ -5,7 +5,7 @@
   <title>Spark</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    /* 页面整体背景黑色 */
+    /* 页面背景黑色 */
     body {
       margin: 0;
       overflow: hidden;
@@ -13,7 +13,7 @@
       font-family: Arial, sans-serif;
     }
 
-    /* Spark文字 顶部艺术字体 */
+    /* Spark标题，顶部中间 */
     .spark-title {
       position: absolute;
       top: 20px;
@@ -26,21 +26,20 @@
       pointer-events: none;
     }
 
-    /* 注册表单 */
+    /* 注册表单区域 */
     .form-container {
       position: absolute;
       top: 50%;
-      left: 75%;
-      transform: translate(-50%, -50%);
+      right: 5%; /* 控制靠右的位置 */
+      transform: translateY(-50%); /* 纵向居中 */
       background: #ffffff;
       padding: 20px 30px;
-      border-radius: 8px;
-      width: 300px;
-      height: auto;
-      z-index: 10;
+      border-radius: 10px;
+      width: 250px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      z-index: 10; /* 保证在最上层 */
     }
-    
+
     .form-container h2 {
       margin-bottom: 15px;
       font-family: 'Great Vibes', cursive;
@@ -48,7 +47,7 @@
       font-size: 2em;
       text-align: center;
     }
-    
+
     .form-container input {
       display: block;
       width: 100%;
@@ -58,7 +57,7 @@
       border: 1px solid #ccc;
       border-radius: 5px;
     }
-    
+
     .form-container button {
       display: block;
       width: 100%;
@@ -72,7 +71,7 @@
       cursor: pointer;
     }
 
-    /* 烟花画布 */
+    /* 背景烟花canvas */
     canvas {
       position: absolute;
       top: 0;
@@ -99,19 +98,19 @@
   <!-- 烟花背景canvas -->
   <canvas id="canvas"></canvas>
 
-  <!-- 烟花特效JS（不影响表单） -->
+  <!-- 烟花特效JS -->
   <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
+    function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    });
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
     function createFirework(x, y) {
       const particleCount = 100;

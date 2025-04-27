@@ -4,111 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Spark</title>
-  <!-- 引入意大利花体 Google 字体 -->
+  <!-- 1. 引入意大利花体 Google 字体 -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
   <style>
+    /* 2. 全屏黑夜背景 */
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       overflow: hidden;
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-      color: #fff;
+      background: #000;
       font-family: 'Great Vibes', cursive;
     }
+    /* 3. 中央花体标题 */
     h1 {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 6em;
-      font-style: italic;
+      margin: 0;
+      font-size: 8vw;            /* 响应式字体大小 */
       color: #fff;
-      text-shadow: 0 0 20px rgba(255,255,255,0.7);
-      z-index: 5;
+      text-shadow: 0 0 20px rgba(255,255,255,0.8);
       pointer-events: none;
+      z-index: 10;
       white-space: nowrap;
     }
+    /* 4. 画布覆盖全屏，用来绘制烟花 */
     canvas {
-      display: block;
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 1;
+      display: block;
     }
   </style>
 </head>
 <body>
+
   <h1>Spark</h1>
   <canvas id="fireworks"></canvas>
+
   <script>
     const canvas = document.getElementById('fireworks');
     const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
 
+    // 响应尺寸变化
     window.addEventListener('resize', () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
     });
 
-    // 生成单个粒子
-    function createParticle(x, y) {
-      const colors = ['#ff8a00', '#e52e71', '#9b00ff', '#00ffe1', '#ffff66'];
+    // 生成一个烟花粒子
+    function createParticle(x,y) {
+      const colors = ['#ff8a00','#e52e71','#9b00ff','#00ffe1','#ffff66'];
       return {
         x, y,
-        radius: Math.random() * 3 + 2,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speedX: (Math.random() - 0.5) * 8,
-        speedY: (Math.random() - 0.5) * 8,
-        life: Math.random() * 50 + 50
+        radius: Math.random()*3+2,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        vx: (Math.random()-0.5)*6,
+        vy: (Math.random()-0.5)*6 - 2,
+        life: Math.random()*60+20
       };
     }
 
     let particles = [];
 
-    // 自动在随机位置不断绽放烟花
+    // 自动不断生成烟花簇
     setInterval(() => {
-      const fx = Math.random() * width;
-      const fy = Math.random() * height * 0.4;
-      for (let i = 0; i < 50; i++) {
-        particles.push(createParticle(fx, fy));
+      const fx = Math.random()*W;
+      const fy = Math.random()*(H*0.4);
+      for(let i=0;i<60;i++){
+        particles.push(createParticle(fx,fy));
       }
-    }, 800);
+    }, 500);
 
-    // 鼠标点击也可以触发
+    // 鼠标 / 触摸 也触发烟花
     canvas.addEventListener('click', e => {
-      for (let i = 0; i < 50; i++) {
-        particles.push(createParticle(e.clientX, e.clientY));
+      for(let i=0;i<60;i++){
+        particles.push(createParticle(e.clientX,e.clientY));
       }
     });
 
+    // 动画主循环
     function animate() {
-      // 半透明黑色覆盖上一帧，产生尾迹效果
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.fillRect(0, 0, width, height);
+      // 半透明黑色叠加，产生尾迹
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.fillRect(0,0,W,H);
 
-      // 绘制和更新所有粒子
-      for (let i = particles.length - 1; i >= 0; i--) {
+      for(let i=particles.length-1;i>=0;i--){
         const p = particles[i];
-        p.x += p.speedX;
-        p.y += p.speedY + 0.5; // 模拟微弱重力
+        p.x += p.vx;
+        p.y += p.vy + 1;    // 模拟微重力
         p.life--;
-        if (p.life <= 0 || p.radius <= 0) {
-          particles.splice(i, 1);
+        if(p.life<=0 || p.radius<=0){
+          particles.splice(i,1);
           continue;
         }
-        // 逐渐缩小和透明
-        p.radius *= 0.96;
+        p.radius *= 0.96;   // 半衰减
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.life / 100;
+        ctx.globalAlpha = p.life/80;
         ctx.fill();
         ctx.globalAlpha = 1;
       }

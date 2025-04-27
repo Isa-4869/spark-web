@@ -97,7 +97,17 @@
 
   <!-- 烟花背景canvas -->
   <canvas id="canvas"></canvas>
-
+  
+ // —— 小烟花动图随机位置 —— 
+    function randomPos(){
+      document.querySelectorAll('.firework').forEach(el=>{
+        el.style.left=Math.random()*(W-50)+'px';
+        el.style.top=Math.random()*(H-50)+'px';
+        el.style.animationDuration=(Math.random()*2+1)+'s';
+      });
+    }
+    setInterval(randomPos,1000);
+  
   <!-- 烟花特效JS -->
   <script>
     const canvas = document.getElementById('canvas');

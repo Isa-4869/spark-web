@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Spark 注册</title>
+  <title>Spark Registration</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
   <style>
     /* —— 基础布局 —— */
@@ -15,8 +15,8 @@
     /* —— 注册表单 —— */
     .form-container {
       position:absolute;
-      top:15%; left:80%;
-      transform:translate(-50%,-15%);
+      top:50%; left:90%;
+      transform:translate(-50%,-50%);
       background:#fff;
       padding:20px 30px;
       border-radius:8px;
@@ -75,11 +75,11 @@
 
   <!-- 嵌入注册表单 -->
   <div class="form-container">
-    <h2>注册</h2>
+    <h2>Register</h2>
     <form id="register-form">
-      <input type="text" name="name" placeholder="请输入姓名" required>
-      <input type="email" name="email" placeholder="请输入邮箱" required>
-      <button type="submit">立即注册</button>
+      <input type="text" name="name" placeholder="Enter your name" required>
+      <input type="email" name="email" placeholder="Enter your email" required>
+      <button type="submit">Register Now</button>
     </form>
   </div>
 
@@ -142,8 +142,8 @@
           name: form.name.value,
           email: form.email.value
         })
-      }).then(r=> r.ok ? alert('注册成功') : alert('出错'))
-        .catch(()=>alert('网络错误'));
+      }).then(r=> r.ok ? alert('Registration successful') : alert('Error'))
+        .catch(()=>alert('Network error'));
     });
   </script>
 </body>

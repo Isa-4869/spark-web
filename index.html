@@ -5,15 +5,12 @@
   <title>Spark</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    /* 页面背景黑色 */
     body {
       margin: 0;
       overflow: hidden;
       background-color: black;
       font-family: Arial, sans-serif;
     }
-
-    /* Spark标题，顶部中间 */
     .spark-title {
       position: absolute;
       top: 20px;
@@ -25,21 +22,18 @@
       z-index: 10;
       pointer-events: none;
     }
-
-    /* 注册表单区域 */
     .form-container {
       position: absolute;
       top: 50%;
-      right: 5%; /* 控制靠右的位置 */
-      transform: translateY(-50%); /* 纵向居中 */
+      right: 5%;
+      transform: translateY(-50%);
       background: #ffffff;
       padding: 20px 30px;
       border-radius: 10px;
       width: 250px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-      z-index: 10; /* 保证在最上层 */
+      z-index: 10;
     }
-
     .form-container h2 {
       margin-bottom: 15px;
       font-family: 'Great Vibes', cursive;
@@ -47,7 +41,6 @@
       font-size: 2em;
       text-align: center;
     }
-
     .form-container input {
       display: block;
       width: 100%;
@@ -57,7 +50,6 @@
       border: 1px solid #ccc;
       border-radius: 5px;
     }
-
     .form-container button {
       display: block;
       width: 100%;
@@ -70,8 +62,6 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
-    /* 背景烟花canvas */
     canvas {
       position: absolute;
       top: 0;
@@ -82,10 +72,8 @@
 </head>
 
 <body>
-  <!-- Spark标题 -->
   <div class="spark-title">Spark</div>
 
-  <!-- 注册表单 -->
   <div class="form-container">
     <h2>Register</h2>
     <form id="registration-form">
@@ -95,20 +83,8 @@
     </form>
   </div>
 
-  <!-- 烟花背景canvas -->
   <canvas id="canvas"></canvas>
-  
- // —— 小烟花动图随机位置 —— 
-    function randomPos(){
-      document.querySelectorAll('.firework').forEach(el=>{
-        el.style.left=Math.random()*(W-50)+'px';
-        el.style.top=Math.random()*(H-50)+'px';
-        el.style.animationDuration=(Math.random()*2+1)+'s';
-      });
-    }
-    setInterval(randomPos,1000);
-  
-  <!-- 烟花特效JS -->
+
   <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
@@ -122,23 +98,36 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    function createFirework(x, y) {
-      const particleCount = 100;
+    function createFirework(x, y, color = 'white') {
+      const particleCount = 50;
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: x,
           y: y,
           speedX: (Math.random() - 0.5) * 5,
           speedY: (Math.random() - 0.5) * 5,
-          radius: Math.random() * 3 + 1,
+          radius: Math.random() * 2 + 1,
+          color: color,
           life: 100
         });
       }
     }
 
+    function randomColor() {
+      const colors = ['white', 'lightblue', 'pink', 'lightyellow', 'violet', 'skyblue'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
     canvas.addEventListener('click', (e) => {
-      createFirework(e.clientX, e.clientY);
+      createFirework(e.clientX, e.clientY, randomColor());
     });
+
+    // 自动生成小烟花
+    setInterval(() => {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height * 0.7; // 只在屏幕上半部分
+      createFirework(x, y, randomColor());
+    }, 1000); // 每1秒生成一个小烟花
 
     function animate() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
@@ -147,7 +136,7 @@
       particles.forEach((p, index) => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = p.color;
         ctx.fill();
 
         p.x += p.speedX;
@@ -164,6 +153,5 @@
 
     animate();
   </script>
-
 </body>
 </html>

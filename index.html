@@ -14,12 +14,15 @@
       overflow: hidden;
       background: #000;
       font-family: 'Great Vibes', cursive;
+      /* 防止未加载字体时出现字体闪烁 */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    /* 3. 中央花体标题 */
+    /* 3. 顶部花体标题 */
     h1 {
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      top: 0; left: 50%;
+      transform: translateX(-50%);
       margin: 0;
       font-size: 8vw;            /* 响应式字体大小 */
       color: #fff;
@@ -27,6 +30,7 @@
       pointer-events: none;
       z-index: 10;
       white-space: nowrap;
+      font-family: 'Great Vibes', cursive;
     }
     /* 4. 背景烟花动图 */
     .firework {

@@ -1,26 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Spark</title>
-  <!-- 1. 引入意大利花体 Google 字体 -->
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Spark 注册</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
   <style>
-    /* 2. 全屏黑夜背景 */
-    html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: #000;
-      font-family: 'Great Vibes', cursive;
-      /* 防止未加载字体时出现字体闪烁 */
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-
-     /* —— 基础布局 —— */
+    /* —— 基础布局 —— */
     html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
     canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
     h1 { position:absolute; top:10px; left:50%; transform:translateX(-50%); 
@@ -80,23 +66,14 @@
   </style>
 </head>
 <body>
-  
-    /* 3. 顶部花体标题 */
-    h1 {
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      margin: 0;
-      font-size: 8vw;            /* 响应式字体大小 */
-      color: #fff;
-      text-shadow: 0 0 20px rgba(255,255,255,0.8);
-      pointer-events: none;
-      z-index: 10;
-      white-space: nowrap;
-      font-family: 'Great Vibes', cursive;
-    }
 
-   <!-- 嵌入注册表单 -->
+  <!-- 烟花Canvas -->
+  <canvas id="fireworks"></canvas>
+
+  <!-- 顶部 Spark -->
+  <h1>Spark</h1>
+
+  <!-- 嵌入注册表单 -->
   <div class="form-container">
     <h2>注册</h2>
     <form id="register-form">
@@ -105,133 +82,69 @@
       <button type="submit">立即注册</button>
     </form>
   </div>
-    
-    /* 4. 背景烟花动图 */
-    .firework {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background-size: cover;
-      opacity: 0;
-      animation: fireworksAnimation 1.5s infinite;
-    }
 
-    /* 5. 动画：烟花从随机位置闪现并消失 */
-    @keyframes fireworksAnimation {
-      0% {
-        opacity: 0;
-        transform: scale(0.5) translateY(-20px);
-      }
-      50% {
-        opacity: 1;
-        transform: scale(1.5) translateY(0);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(0.5) translateY(20px);
-      }
-    }
+  <!-- 背景小烟花动图 -->
+  <div class="firework" style="background-image:url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
+  <div class="firework" style="background-image:url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
+  <div class="firework" style="background-image:url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
 
-  </style>
-</head>
-<body>
-
-  <h1>Spark</h1>
-
-  <!-- 小烟花动图 -->
-  <div class="firework" style="background-image: url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
-  <div class="firework" style="background-image: url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
-  <div class="firework" style="background-image: url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
-  
   <script>
-    const canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
+    // —— 烟花粒子效果（同之前） ——
+    const canvas = document.getElementById('fireworks');
     const ctx = canvas.getContext('2d');
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
+    let W=canvas.width=innerWidth, H=canvas.height=innerHeight;
+    window.addEventListener('resize',()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
 
-    // 响应尺寸变化
-    window.addEventListener('resize', () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    });
-
-    // 生成一个烟花粒子
-    function createParticle(x, y) {
-      const colors = ['#ff8a00', '#e52e71', '#9b00ff', '#00ffe1', '#ffff66'];
-      return {
-        x, y,
-        radius: Math.random() * 3 + 2,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        vx: (Math.random() - 0.5) * 6,
-        vy: (Math.random() - 0.5) * 6 - 2,
-        life: Math.random() * 60 + 20
-      };
+    function createParticle(x,y){
+      const colors=['#ff8a00','#e52e71','#9b00ff','#00ffe1','#ffff66'];
+      return {x,y,radius:Math.random()*3+2, color:colors[Math.floor(Math.random()*colors.length)],
+        vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6-2, life:Math.random()*60+20};
     }
-
-    let particles = [];
-
-    // 自动不断生成烟花簇
-    setInterval(() => {
-      const fx = Math.random() * W;
-      const fy = Math.random() * (H * 0.4);
-      for (let i = 0; i < 60; i++) {
-        particles.push(createParticle(fx, fy));
-      }
-    }, 500);
-
-    // 鼠标 / 触摸 也触发烟花
-    canvas.addEventListener('click', e => {
-      for (let i = 0; i < 60; i++) {
-        particles.push(createParticle(e.clientX, e.clientY));
-      }
+    let particles=[];
+    setInterval(()=>{
+      let fx=Math.random()*W, fy=Math.random()*(H*0.4);
+      for(let i=0;i<60;i++) particles.push(createParticle(fx,fy));
+    },500);
+    canvas.addEventListener('click',e=>{
+      for(let i=0;i<60;i++) particles.push(createParticle(e.clientX,e.clientY));
     });
-
-    // 动画主循环
-    function animate() {
-      // 半透明黑色叠加，产生尾迹
-      ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      ctx.fillRect(0, 0, W, H);
-
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy + 1;    // 模拟微重力
-        p.life--;
-        if (p.life <= 0 || p.radius <= 0) {
-          particles.splice(i, 1);
-          continue;
-        }
-        p.radius *= 0.96;   // 半衰减
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.life / 80;
-        ctx.fill();
-        ctx.globalAlpha = 1;
+    function animate(){
+      ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(0,0,W,H);
+      for(let i=particles.length-1;i>=0;i--){
+        let p=particles[i]; p.x+=p.vx; p.y+=p.vy+1; p.life--;
+        if(p.life<=0){particles.splice(i,1);continue;}
+        p.radius*=0.96; ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,2*Math.PI);
+        ctx.fillStyle=p.color; ctx.globalAlpha=p.life/80; ctx.fill(); ctx.globalAlpha=1;
       }
-
       requestAnimationFrame(animate);
     }
-
     animate();
 
-    // 每个小烟花的动画位置
-    function randomPosition() {
-      const fireworks = document.querySelectorAll('.firework');
-      fireworks.forEach(firework => {
-        firework.style.left = Math.random() * (window.innerWidth - 50) + 'px';
-        firework.style.top = Math.random() * (window.innerHeight - 50) + 'px';
-        firework.style.animationDuration = Math.random() * 2 + 1 + 's';
+    // —— 小烟花动图随机位置 —— 
+    function randomPos(){
+      document.querySelectorAll('.firework').forEach(el=>{
+        el.style.left=Math.random()*(W-50)+'px';
+        el.style.top=Math.random()*(H-50)+'px';
+        el.style.animationDuration=(Math.random()*2+1)+'s';
       });
     }
+    setInterval(randomPos,1000);
 
-    // 随机更改小烟花位置
-    setInterval(randomPosition, 1000);
+    // —— 注册表单提交 —— 
+    document.getElementById('register-form').addEventListener('submit', e=>{
+      e.preventDefault();
+      const form = e.target;
+      // 这里调用你的后端注册接口，例如：
+      fetch('/register', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          name: form.name.value,
+          email: form.email.value
+        })
+      }).then(r=> r.ok ? alert('注册成功') : alert('出错'))
+        .catch(()=>alert('网络错误'));
+    });
   </script>
 </body>
 </html>
-
-
-
-

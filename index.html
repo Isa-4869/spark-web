@@ -28,23 +28,46 @@
       z-index: 10;
       white-space: nowrap;
     }
-    /* 4. 画布覆盖全屏，用来绘制烟花 */
-    canvas {
+    /* 4. 背景烟花动图 */
+    .firework {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 1;
-      display: block;
+      width: 50px;
+      height: 50px;
+      background-size: cover;
+      opacity: 0;
+      animation: fireworksAnimation 1.5s infinite;
     }
+
+    /* 5. 动画：烟花从随机位置闪现并消失 */
+    @keyframes fireworksAnimation {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(-20px);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.5) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
+      }
+    }
+
   </style>
 </head>
 <body>
 
   <h1>Spark</h1>
-  <canvas id="fireworks"></canvas>
 
+  <!-- 小烟花动图 -->
+  <div class="firework" style="background-image: url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
+  <div class="firework" style="background-image: url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
+  <div class="firework" style="background-image: url('https://cdn.pixabay.com/photo/2017/12/17/17/14/fireworks-3027011_960_720.gif');"></div>
+  
   <script>
-    const canvas = document.getElementById('fireworks');
+    const canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
     let W = canvas.width = window.innerWidth;
     let H = canvas.height = window.innerHeight;
@@ -56,15 +79,15 @@
     });
 
     // 生成一个烟花粒子
-    function createParticle(x,y) {
-      const colors = ['#ff8a00','#e52e71','#9b00ff','#00ffe1','#ffff66'];
+    function createParticle(x, y) {
+      const colors = ['#ff8a00', '#e52e71', '#9b00ff', '#00ffe1', '#ffff66'];
       return {
         x, y,
-        radius: Math.random()*3+2,
-        color: colors[Math.floor(Math.random()*colors.length)],
-        vx: (Math.random()-0.5)*6,
-        vy: (Math.random()-0.5)*6 - 2,
-        life: Math.random()*60+20
+        radius: Math.random() * 3 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vx: (Math.random() - 0.5) * 6,
+        vy: (Math.random() - 0.5) * 6 - 2,
+        life: Math.random() * 60 + 20
       };
     }
 
@@ -72,17 +95,17 @@
 
     // 自动不断生成烟花簇
     setInterval(() => {
-      const fx = Math.random()*W;
-      const fy = Math.random()*(H*0.4);
-      for(let i=0;i<60;i++){
-        particles.push(createParticle(fx,fy));
+      const fx = Math.random() * W;
+      const fy = Math.random() * (H * 0.4);
+      for (let i = 0; i < 60; i++) {
+        particles.push(createParticle(fx, fy));
       }
     }, 500);
 
     // 鼠标 / 触摸 也触发烟花
     canvas.addEventListener('click', e => {
-      for(let i=0;i<60;i++){
-        particles.push(createParticle(e.clientX,e.clientY));
+      for (let i = 0; i < 60; i++) {
+        particles.push(createParticle(e.clientX, e.clientY));
       }
     });
 
@@ -90,22 +113,22 @@
     function animate() {
       // 半透明黑色叠加，产生尾迹
       ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      ctx.fillRect(0,0,W,H);
+      ctx.fillRect(0, 0, W, H);
 
-      for(let i=particles.length-1;i>=0;i--){
+      for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx;
         p.y += p.vy + 1;    // 模拟微重力
         p.life--;
-        if(p.life<=0 || p.radius<=0){
-          particles.splice(i,1);
+        if (p.life <= 0 || p.radius <= 0) {
+          particles.splice(i, 1);
           continue;
         }
         p.radius *= 0.96;   // 半衰减
         ctx.beginPath();
-        ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.life/80;
+        ctx.globalAlpha = p.life / 80;
         ctx.fill();
         ctx.globalAlpha = 1;
       }
@@ -114,6 +137,19 @@
     }
 
     animate();
+
+    // 每个小烟花的动画位置
+    function randomPosition() {
+      const fireworks = document.querySelectorAll('.firework');
+      fireworks.forEach(firework => {
+        firework.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+        firework.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+        firework.style.animationDuration = Math.random() * 2 + 1 + 's';
+      });
+    }
+
+    // 随机更改小烟花位置
+    setInterval(randomPosition, 1000);
   </script>
 </body>
 </html>
